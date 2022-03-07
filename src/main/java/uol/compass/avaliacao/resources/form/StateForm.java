@@ -1,41 +1,33 @@
-package uol.compass.avaliacao.controller.dto;
+package uol.compass.avaliacao.resources.form;
 
 import java.time.LocalDate;
+import java.time.Period;
 
-import org.springframework.data.domain.Page;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-import uol.compass.avaliacao.model.Estado;
-import uol.compass.avaliacao.model.Regioes;
+import uol.compass.avaliacao.config.validacao.MismatchInformationException;
+import uol.compass.avaliacao.entities.State;
+import uol.compass.avaliacao.entities.Regions;
 
-public class EstadoDto {
+public class StateForm {
 
-	private long id;
+	@NotNull
+	@NotEmpty
 	private String nome;
-	private Regioes regiao;
+	@NotNull
+	private Regions regiao;
+	@NotNull
 	private int populacao;
+	@NotNull
+	@NotEmpty
 	private String capital;
+	@NotNull
 	private double area;
+	@NotNull
 	private LocalDate dataDeFundacao;
+	@NotNull
 	private int tempoDesdeFundacao;
-
-	public EstadoDto(Estado estado) {
-		this.id = estado.getId();
-		this.nome = estado.getNome();
-		this.regiao = estado.getRegiao();
-		this.populacao = estado.getPopulacao();
-		this.capital = estado.getCapital();
-		this.area = estado.getArea();
-		this.dataDeFundacao = estado.getDataDeFundacao();
-		this.tempoDesdeFundacao = estado.getTempoDesdeFundacao();
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getNome() {
 		return nome;
@@ -45,11 +37,11 @@ public class EstadoDto {
 		this.nome = nome;
 	}
 
-	public Regioes getRegiao() {
+	public Regions getRegiao() {
 		return regiao;
 	}
 
-	public void setRegiao(Regioes regiao) {
+	public void setRegiao(Regions regiao) {
 		this.regiao = regiao;
 	}
 
@@ -93,8 +85,11 @@ public class EstadoDto {
 		this.tempoDesdeFundacao = tempoDesdeFundacao;
 	}
 
-	public static Page<EstadoDto> converter(Page<Estado> estados) {
-		return estados.map(EstadoDto::new);
+	public State converter() {
+		if (Period.between(this.dataDeFundacao, LocalDate.now()).getYears() == this.tempoDesdeFundacao) {
+			return new State(nome, regiao, populacao, capital, area, dataDeFundacao, tempoDesdeFundacao);
+		} else {
+			throw new MismatchInformationException();
+		}
 	}
-
 }

@@ -1,33 +1,41 @@
-package uol.compass.avaliacao.controller.form;
+package uol.compass.avaliacao.resources.dto;
 
 import java.time.LocalDate;
-import java.time.Period;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
 
-import uol.compass.avaliacao.config.validacao.MismatchInformationException;
-import uol.compass.avaliacao.model.Estado;
-import uol.compass.avaliacao.model.Regioes;
+import uol.compass.avaliacao.entities.State;
+import uol.compass.avaliacao.entities.Regions;
 
-public class EstadoForm {
+public class StateDto {
 
-	@NotNull
-	@NotEmpty
+	private long id;
 	private String nome;
-	@NotNull
-	private Regioes regiao;
-	@NotNull
+	private Regions regiao;
 	private int populacao;
-	@NotNull
-	@NotEmpty
 	private String capital;
-	@NotNull
 	private double area;
-	@NotNull
 	private LocalDate dataDeFundacao;
-	@NotNull
 	private int tempoDesdeFundacao;
+
+	public StateDto(State state) {
+		this.id = state.getId();
+		this.nome = state.getNome();
+		this.regiao = state.getRegiao();
+		this.populacao = state.getPopulacao();
+		this.capital = state.getCapital();
+		this.area = state.getArea();
+		this.dataDeFundacao = state.getDataDeFundacao();
+		this.tempoDesdeFundacao = state.getTempoDesdeFundacao();
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getNome() {
 		return nome;
@@ -37,11 +45,11 @@ public class EstadoForm {
 		this.nome = nome;
 	}
 
-	public Regioes getRegiao() {
+	public Regions getRegiao() {
 		return regiao;
 	}
 
-	public void setRegiao(Regioes regiao) {
+	public void setRegiao(Regions regiao) {
 		this.regiao = regiao;
 	}
 
@@ -85,11 +93,8 @@ public class EstadoForm {
 		this.tempoDesdeFundacao = tempoDesdeFundacao;
 	}
 
-	public Estado converter() {
-		if (Period.between(this.dataDeFundacao, LocalDate.now()).getYears() == this.tempoDesdeFundacao) {
-			return new Estado(nome, regiao, populacao, capital, area, dataDeFundacao, tempoDesdeFundacao);
-		} else {
-			throw new MismatchInformationException();
-		}
+	public static Page<StateDto> converter(Page<State> states) {
+		return states.map(StateDto::new);
 	}
+
 }

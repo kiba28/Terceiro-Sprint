@@ -1,4 +1,4 @@
-package uol.compass.avaliacao.controller;
+package uol.compass.avaliacao.resources;
 
 import java.net.URI;
 import java.util.Optional;
@@ -23,50 +23,50 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import uol.compass.avaliacao.controller.dto.EstadoDto;
-import uol.compass.avaliacao.controller.form.AtualizacaoEstadoForm;
-import uol.compass.avaliacao.controller.form.EstadoForm;
-import uol.compass.avaliacao.model.Estado;
-import uol.compass.avaliacao.model.Regioes;
-import uol.compass.avaliacao.repository.EstadoRepository;
+import uol.compass.avaliacao.entities.State;
+import uol.compass.avaliacao.entities.Regions;
+import uol.compass.avaliacao.repositories.StateRepository;
+import uol.compass.avaliacao.resources.dto.StateDto;
+import uol.compass.avaliacao.resources.form.UpdateStateForm;
+import uol.compass.avaliacao.resources.form.StateForm;
 
 @RestController
 @RequestMapping("/api/states")
-public class EstadosController {
+public class StateController {
 
 	@Autowired
-	private EstadoRepository estadoRespository;
+	private StateRepository estadoRespository;
 
 	@GetMapping
-	public Page<EstadoDto> listar(@RequestParam(required = false) String regiao,
+	public Page<StateDto> listar(@RequestParam(required = false) String regiao,
 			@PageableDefault(sort = "id", direction = Direction.ASC) Pageable paginacao) {
 
 		if (regiao == null) {
-			Page<Estado> estados = estadoRespository.findAll(paginacao);
-			return EstadoDto.converter(estados);
+			Page<State> states = estadoRespository.findAll(paginacao);
+			return StateDto.converter(states);
 		} else {
-			Page<Estado> estados = estadoRespository.findByRegiao(Regioes.valueOf(regiao), paginacao);
-			return EstadoDto.converter(estados);
+			Page<State> states = estadoRespository.findByRegiao(Regions.valueOf(regiao), paginacao);
+			return StateDto.converter(states);
 		}
 	}
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<EstadoDto> cadastrar(@RequestBody @Valid EstadoForm estadoForm,
+	public ResponseEntity<StateDto> cadastrar(@RequestBody @Valid StateForm stateForm,
 			UriComponentsBuilder uriBuilder) {
-		Estado estado = estadoForm.converter();
-		estadoRespository.save(estado);
+		State state = stateForm.converter();
+		estadoRespository.save(state);
 
-		URI uri = uriBuilder.path("/api/states/{id}").buildAndExpand(estado.getId()).toUri();
-		return ResponseEntity.created(uri).body(new EstadoDto(estado));
+		URI uri = uriBuilder.path("/api/states/{id}").buildAndExpand(state.getId()).toUri();
+		return ResponseEntity.created(uri).body(new StateDto(state));
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<EstadoDto> detalhar(@PathVariable Long id) {
-		Optional<Estado> optional = estadoRespository.findById(id);
+	public ResponseEntity<StateDto> detalhar(@PathVariable Long id) {
+		Optional<State> optional = estadoRespository.findById(id);
 
 		if (optional.isPresent()) {
-			return ResponseEntity.ok(new EstadoDto(optional.get()));
+			return ResponseEntity.ok(new StateDto(optional.get()));
 		}
 
 		return ResponseEntity.notFound().build();
@@ -74,11 +74,11 @@ public class EstadosController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<EstadoDto> altualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoEstadoForm form) {
-		Optional<Estado> optional = estadoRespository.findById(id);
+	public ResponseEntity<StateDto> altualizar(@PathVariable Long id, @RequestBody @Valid UpdateStateForm form) {
+		Optional<State> optional = estadoRespository.findById(id);
 		if (optional.isPresent()) {
-			Estado estado = form.atualizar(id, estadoRespository);
-			return ResponseEntity.ok(new EstadoDto(estado));
+			State state = form.atualizar(id, estadoRespository);
+			return ResponseEntity.ok(new StateDto(state));
 		}
 
 		return ResponseEntity.notFound().build();
@@ -87,12 +87,11 @@ public class EstadosController {
 	@DeleteMapping("/{id}")
 	@Transactional
 	public ResponseEntity<?> remover(@PathVariable long id) {
-		Optional<Estado> optional = estadoRespository.findById(id);
+		Optional<State> optional = estadoRespository.findById(id);
 		if (optional.isPresent()) {
 			estadoRespository.deleteById(id);
 			return ResponseEntity.ok().build();
 		}
 		return ResponseEntity.notFound().build();
 	}
-
 }

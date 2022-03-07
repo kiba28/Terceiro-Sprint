@@ -1,12 +1,12 @@
-package uol.compass.avaliacao.controller.form;
+package uol.compass.avaliacao.resources.form;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import uol.compass.avaliacao.model.Estado;
-import uol.compass.avaliacao.repository.EstadoRepository;
+import uol.compass.avaliacao.entities.State;
+import uol.compass.avaliacao.repositories.StateRepository;
 
-public class AtualizacaoEstadoForm {
+public class UpdateStateForm {
 
 	@NotNull
 	private int populacao;
@@ -40,12 +40,12 @@ public class AtualizacaoEstadoForm {
 		this.area = area;
 	}
 
-	public Estado atualizar(Long id, EstadoRepository estadoRespository) {
-		Estado estado = estadoRespository.getById(id);
-		estado.setPopulacao(this.populacao);
-		estado.setCapital(this.capital);
-		estado.setArea(this.area);
-		
-		return estado;
+	public State atualizar(Long id, StateRepository estadoRespository) {
+		State state = estadoRespository.getById(id);
+		state.setPopulacao(this.populacao);
+		state.setCapital(this.capital);
+		state.setArea(this.area);
+
+		return state;
 	}
 }

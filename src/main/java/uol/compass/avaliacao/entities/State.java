@@ -1,4 +1,4 @@
-package uol.compass.avaliacao.model;
+package uol.compass.avaliacao.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Estado implements Serializable {
+public class State implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,17 +21,17 @@ public class Estado implements Serializable {
 	private long id;
 	private String nome;
 	@Enumerated(EnumType.STRING)
-	private Regioes regiao;
+	private Regions regiao;
 	private int populacao;
 	private String capital;
 	private double area;
 	private LocalDate dataDeFundacao;
 	private int tempoDesdeFundacao;
 
-	public Estado() {
+	public State() {
 	}
 
-	public Estado(String nome, Regioes regiao, int populacao, String capital, double area, LocalDate dataDeFundacao,
+	public State(String nome, Regions regiao, int populacao, String capital, double area, LocalDate dataDeFundacao,
 			int tempoDesdeFundacao) {
 		this.nome = nome;
 		this.regiao = regiao;
@@ -58,11 +58,11 @@ public class Estado implements Serializable {
 		this.nome = nome;
 	}
 
-	public Regioes getRegiao() {
+	public Regions getRegiao() {
 		return regiao;
 	}
 
-	public void setRegiao(Regioes regiao) {
+	public void setRegiao(Regions regiao) {
 		this.regiao = regiao;
 	}
 
@@ -119,7 +119,7 @@ public class Estado implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Estado other = (Estado) obj;
+		State other = (State) obj;
 		return Double.doubleToLongBits(area) == Double.doubleToLongBits(other.area) && id == other.id
 				&& populacao == other.populacao && regiao == other.regiao;
 	}

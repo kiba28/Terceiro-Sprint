@@ -11,13 +11,11 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SwaggerConfigurations {
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("uol.compass.avaliacao"))
-                .paths(PathSelectors.ant("/**"))
-                .build();
-    }
-    
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors.basePackage("uol.compass.avaliacao")).paths(PathSelectors.ant("/**"))
+				.build();
+	}
+
 }

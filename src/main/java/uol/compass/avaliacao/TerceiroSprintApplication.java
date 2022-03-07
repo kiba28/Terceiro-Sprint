@@ -14,5 +14,4 @@ public class TerceiroSprintApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TerceiroSprintApplication.class, args);
 	}
-
 }
